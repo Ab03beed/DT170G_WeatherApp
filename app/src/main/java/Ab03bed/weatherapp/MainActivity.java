@@ -82,11 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
-
-
         FetchWeather fetchWeather = retrofit.create(FetchWeather.class);
-
-
 
 
         Call<WeatherDataResponse> call = fetchWeather.getWeatherData("60.10","9.58");
@@ -99,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     if (weatherDataResponse != null) {
                         weatherDataList = weatherDataResponse.getData();
                         Log.d("GG", "GGGGGGGs");
+
 
                         /*for(int i=0; i<weatherDataList.size(); i++){
                             System.out.println(weatherDataList.get(i).);
