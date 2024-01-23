@@ -1,18 +1,15 @@
 package Ab03bed.weatherapp;
 
-import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import kotlin.jvm.JvmOverloads;
-
-@Root(name = "product", strict = false)
+@Root(name = "product", strict = true)
 public class WeatherDataResponse{
 
-    @ElementList(inline = true, required = false)
+    /*@ElementList(inline = true, required = true)
     private List<WeatherData> data;
 
 
@@ -26,5 +23,5 @@ public class WeatherDataResponse{
 
     public void setData(List<WeatherData> data) {
         this.data = data;
-    }
+    }*/
 }

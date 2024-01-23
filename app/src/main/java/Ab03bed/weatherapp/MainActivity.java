@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String USER_AGENT = "weather app";
 
-    public List<WeatherData> weatherDataList;
+    public List<Time> time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,15 +85,16 @@ public class MainActivity extends AppCompatActivity {
         FetchWeather fetchWeather = retrofit.create(FetchWeather.class);
 
 
-        Call<WeatherDataResponse> call = fetchWeather.getWeatherData("60.10","9.58");
+        Call<WeatherData> call = fetchWeather.getWeatherData("60.10","9.58");
 
-        call.enqueue(new Callback<WeatherDataResponse>() {
+        call.enqueue(new Callback<WeatherData>() {
             @Override
-            public void onResponse(Call<WeatherDataResponse> call, Response<WeatherDataResponse> response) {
+            public void onResponse(Call<WeatherData> call, Response<WeatherData> response) {
                 if (response.isSuccessful()) {
-                    WeatherDataResponse weatherDataResponse = response.body();
-                    if (weatherDataResponse != null) {
-                        weatherDataList = weatherDataResponse.getData();
+                    WeatherData weatherData = response.body();
+
+                    if (weatherData != null) {
+                        time = weatherData.getProduct().getTimeList();
                         Log.d("GG", "GGGGGGGs");
 
 
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<WeatherDataResponse> call, Throwable t) {
+            public void onFailure(Call<WeatherData> call, Throwable t) {
                 // Handle failure
                 Log.d("GG",  "Network request failed: " + t.getMessage());
             }
