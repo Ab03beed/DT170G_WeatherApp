@@ -11,7 +11,11 @@ public interface FetchWeather {
     //@GET("/weatherapi/locationforecast/2.0/classic?")
     //Call<Weather> getWeatherData(@Query("lat") String lat, @Query("lon") String lon);
 
+    //@GET("/weatherapi/locationforecast/2.0/classic")
+    //Call<List<WeatherData>> getWeatherData(@Query("lat") String lat, @Query("lon") String lon);
+
     @GET("/weatherapi/locationforecast/2.0/classic?")
-    Call<List<WeatherData>> getWeatherData(@Query("lat") String lat, @Query("lon") String lon);
+    Call<WeatherDataResponse> getWeatherData(@Query("lat") String lat, @Query("lon") String lon);
 
 }
+
