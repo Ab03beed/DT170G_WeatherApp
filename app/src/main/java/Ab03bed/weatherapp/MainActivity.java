@@ -2,7 +2,11 @@ package Ab03bed.weatherapp;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -27,9 +31,6 @@ public class MainActivity extends AppCompatActivity {
     //air_temperature		        celsius	air temperature at 2m above the ground
     //cloud_area_fraction		    %	total cloud cover for all heights
 
-    private final String WS_HOST = "https://api.met.no/";
-    private final String USER_AGENT = "weather app";
-
 
 
     @Override
@@ -37,56 +38,58 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+
+        fetchData();
+
+    }
+
+    private void fetchData() {
+        final String WS_HOST = "https://api.met.no/";
+        final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0";
+
+
+        //Creating a HttpClient with a user agent in the header.
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
-                        Request request = chain.request()
-                                .newBuilder()
-                                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0")
-                                .build();
-                        return chain.proceed(request);
-                    }
-                })
+                .addInterceptor(chain -> chain.proceed(chain.request()
+                        .newBuilder()
+                        .header("User-Agent", USER_AGENT)
+                        .build()))
                 .build();
 
-
+        //Creating Retrofit obj.
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(WS_HOST)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
 
+        //Letting Retrofit know what api methods it has access to.
         FetchWeather fetchWeather = retrofit.create(FetchWeather.class);
 
-
+        //Fetching using the HTTP @GET method.
         Call<WeatherData> call = fetchWeather.getWeatherData("60.10","9.58");
-
         call.enqueue(new Callback<WeatherData>() {
             @Override
             public void onResponse(Call<WeatherData> call, Response<WeatherData> response) {
                 if (response.isSuccessful()) {
                     WeatherData weatherData = response.body();
 
-                    if (weatherData != null) {
-                        Log.d("GG", "GGGGGGGs");
-                        List<Timeseries> timeList = weatherData.getProperties().getTimeseries();
-                        for(int i=0; i<timeList.size(); i++){
-                            System.out.println("Time: " + timeList.get(i).time + " | Data: "
-                                    + timeList.get(i).data.instant.getDetails().air_pressure_at_sea_level + " "
-                                    + timeList.get(i).data.instant.getDetails().air_temperature + " "
-                                    + timeList.get(i).data.instant.getDetails().cloud_area_fraction + " "
-                                    + timeList.get(i).data.instant.getDetails().wind_from_direction + " "
-                                    + timeList.get(i).data.instant.getDetails().wind_speed);
-                        }
-
+                    List<TimeSeries> timeList = weatherData.getProperties().getTimeseries();
+                    for(int i=0; i<timeList.size(); i++){
+                        System.out.println("Time: " + timeList.get(i).getTime() + " | Data: "
+                                + timeList.get(i).getData().getInstant().getDetails().getAir_temperature() + " "
+                                + timeList.get(i).getData().getInstant().getDetails().getAir_temperature()  + " "
+                                + timeList.get(i).getData().getInstant().getDetails().getAir_temperature()  + " "
+                                + timeList.get(i).getData().getInstant().getDetails().getAir_temperature()  + " "
+                                + timeList.get(i).getData().getInstant().getDetails().getAir_temperature());
                     }
+
                 } else {
                     // Handle error
-                    Log.d("GG", "Error msg: " + response.message());
                     Log.d("GG", "Error bdy: " + response.errorBody());
                     Log.d("GG", "Error code: " + response.code());
-                    Log.d("GG", "Error toStr: " + response.toString());
                 }
             }
 
@@ -96,7 +99,5 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("GG",  "Network request failed: " + t.getMessage());
             }
         });
-
-
     }
 }

@@ -2,8 +2,12 @@ package Ab03bed.weatherapp;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+
 public class WeatherData {
-    public Properties properties;
+    private Properties properties;
 
     public Properties getProperties() {
         return properties;
@@ -11,25 +15,31 @@ public class WeatherData {
 }
 
 
-
 class Properties {
+    private List<TimeSeries> timeseries;
 
-    public List<Timeseries> timeseries;
-
-    public List<Timeseries> getTimeseries() {
+    public List<TimeSeries> getTimeseries() {
         return timeseries;
     }
 }
 
-class Timeseries {
-    public String time;
-    public TimeseriesData data;
+class TimeSeries {
+    private String time;
+    private TimeSeriesData data;
+
+    public TimeSeriesData getData() {
+        return data;
+    }
+
+    public String getTime() {
+        return time;
+    }
 }
 
 
-class TimeseriesData {
-    public InstantData instant;
-    public Next1Hour next_1_hours;
+class TimeSeriesData {
+    private InstantData instant;
+    private Next1Hour next_1_hours;
     public InstantData getInstant() {
         return instant;
     }
@@ -40,7 +50,7 @@ class TimeseriesData {
 }
 
 class InstantData {
-    public Details details;
+    private Details details;
 
     public Details getDetails() {
         return details;
@@ -48,43 +58,42 @@ class InstantData {
 }
 
 class Details {
-    public double air_pressure_at_sea_level;
-    public double air_temperature;
-    public double cloud_area_fraction;
-    public double wind_from_direction;
-    public double wind_speed;
-
-    public double getAir_pressure_at_sea_level() {
-        return air_pressure_at_sea_level;
-    }
+    private double air_temperature;
+    private double wind_speed;
+    private double wind_from_direction;
+    private double cloud_area_fraction;
 
     public double getAir_temperature() {
         return air_temperature;
     }
-
-    public double getCloud_area_fraction() {
-        return cloud_area_fraction;
-    }
-
-    public double getWind_from_direction() {
-        return wind_from_direction;
-    }
-
-    public double getWind_speed() {
-        return wind_speed;
-    }
+    public double getWind_speed() { return wind_speed; }
+    public double getWind_from_direction() { return wind_from_direction; }
+    public double getCloud_area_fraction() { return cloud_area_fraction; }
 
 
 }
-
-
 
 class Next1Hour {
-    public Summary summary;
-    public Details details;
+    private Summary summary;
+    private Precipitation precipitation;
+
+    public Summary getSummary() { return summary; }
+
+    public Precipitation getPrecipitation() { return precipitation; }
+}
+
+class Summary {
+    private String symbol_code;
+    public String getSymbol_code() { return symbol_code; }
+}
+class Precipitation {
+    private double precipitation_amount;
+    public double getPrecipitation_amount() { return precipitation_amount; }
 }
 
 
-class Summary {
-    public String symbol_code;
+
+interface FetchWeather {
+    @GET("/weatherapi/locationforecast/2.0/compact?")
+    Call<WeatherData> getWeatherData(@Query("lat") String lat, @Query("lon") String lon);
 }
