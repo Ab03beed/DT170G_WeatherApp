@@ -5,8 +5,12 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
 import java.util.List;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     //cloud_area_fraction		    %	total cloud cover for all heights
 
     private final String WS_HOST = "https://api.met.no/";
+    private final String USER_AGENT = "weather app";
+
 
 
     @Override
@@ -31,10 +37,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request()
+                                .newBuilder()
+                                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0")
+                                .build();
+                        return chain.proceed(request);
+                    }
+                })
+                .build();
+
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(WS_HOST)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
                 .build();
 
         FetchWeather fetchWeather = retrofit.create(FetchWeather.class);
