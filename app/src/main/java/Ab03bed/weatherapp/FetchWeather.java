@@ -8,6 +8,9 @@ import retrofit2.http.Query;
 
 public interface FetchWeather {
     //why you leave alone my darling, dont you have a heart in you? i feel so lonly when you go to your famliy and donot care about the bread and the salt between us? signed by #doyouwantacarAbro
+    //Abbe: i have atucly to.
+    //Abbe: I have no heart in me.
+    //Abbe: Not my matter.
     //@GET("/weatherapi/locationforecast/2.0/classic?")
     //Call<Weather> getWeatherData(@Query("lat") String lat, @Query("lon") String lon);
 
